@@ -192,7 +192,7 @@ def inference(
         logger.info(f"========== model: bert-base-uncased fold: {fold} inference ==========")
         model = BaseModel(model_name)
         model.to(device)
-        model.load_state_dict(torch.load(models_dir + f"bert-base-uncased_fold{fold}_best.pth")["model"])
+        model.load_state_dict(torch.load(os.path.join(models_dir, f"bert-base-uncased_fold{fold}_best.pth"))["model"])
         model.eval()
         preds = []
         for input_ids, attention_mask in tqdm(data_loader, total=len(data_loader)):
@@ -289,10 +289,10 @@ def train_loop(
             logger.info(f"Epoch {epoch+1} - Save Best Score: {best_score:.4f} Model")
             torch.save(
                 {"model": model.state_dict(), "preds": preds},
-                output_dir + f"bert-base-uncased_fold{fold}_best.pth",
+                os.path.join(output_dir, f"bert-base-uncased_fold{fold}_best.pth"),
             )
 
-    check_point = torch.load(output_dir + f"bert-base-uncased_fold{fold}_best.pth")
+    check_point = torch.load(os.path.join(output_dir, f"bert-base-uncased_fold{fold}_best.pth"))
 
     valid_folds["preds"] = check_point["preds"]
 
@@ -367,12 +367,12 @@ def main(hparams):
         models_dir=output_dir,
         tokenizer=tokenizer,
     )
-    pd.Series(predictions).to_csv(output_dir + "predictions.csv", index=False)
+    pd.Series(predictions).to_csv(os.path.join(output_dir, "predictions.csv"), index=False)
     predictions1 = np.where(predictions < border, 0, 1)
 
     # submission
     sub["judgement"] = predictions1
-    sub.to_csv(output_dir + "submission.csv", index=False, header=False)
+    sub.to_csv(os.path.join(output_dir, "submission.csv"), index=False, header=False)
 
 
 if __name__ == "__main__":
