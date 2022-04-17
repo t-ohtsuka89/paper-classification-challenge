@@ -14,7 +14,7 @@ from sklearn.metrics import fbeta_score
 from sklearn.model_selection import StratifiedKFold
 from torch import optim
 from torch.utils.data import DataLoader
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from transformers.models.auto.tokenization_auto import AutoTokenizer
 from transformers.tokenization_utils import PreTrainedTokenizer
 
