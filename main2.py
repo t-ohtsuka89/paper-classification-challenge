@@ -304,6 +304,10 @@ def main(hparams):
     seed = hparams.seed
     log_dir = os.path.join(output_dir, "log")
 
+    # make directory if not exists
+    os.makedirs(data_dir, exist_ok=True)
+    os.makedirs(log_dir, exist_ok=True)
+
     # fix seed
     seed_everything(seed)
 
