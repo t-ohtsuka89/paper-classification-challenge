@@ -6,6 +6,7 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": true,
     },
+    "editor.formatOnPaste": false,
   },
   "python.formatting.provider": "black",
   "python.formatting.blackArgs": [
