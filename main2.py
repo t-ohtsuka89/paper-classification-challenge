@@ -20,6 +20,7 @@ from transformers.tokenization_utils import PreTrainedTokenizer
 
 from dataset import BaseDataset
 from model import BaseModel
+from utils.seed import seed_everything
 
 warnings.filterwarnings("ignore")
 
@@ -36,20 +37,6 @@ def init_logger(log_dir: str, filename: str = "train.log") -> Logger:
     logger.addHandler(handler1)
     logger.addHandler(handler2)
     return logger
-
-
-def seed_torch(seed: int = 42):
-    # python の組み込み関数の seed を固定
-    random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
-    # numpy の seed を固定
-    np.random.seed(seed)
-    # torch の seed を固定
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    # 決定論的アルゴリズムを使用する
-    torch.backends.cudnn.deterministic = True  # type: ignore
 
 
 def get_kfold_data(data_frame: pd.DataFrame, fold_num: int, random_state: int) -> pd.DataFrame:
@@ -312,11 +299,11 @@ def main(hparams):
     fold_size: int = hparams.fold
     model_name: str = hparams.model_name
     output_dir: str = hparams.output_dir
-    seed = 472
+    seed = hparams.seed
     log_dir = os.path.join(output_dir, "log")
 
     # fix seed
-    seed_torch(seed)
+    seed_everything(seed)
 
     logger = init_logger(log_dir)
 
@@ -385,6 +372,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("--data_dir", default="data", type=str)
     parser.add_argument("--output_dir", default="outputs", type=str)
+    parser.add_argument("--seed", default=472, type=int)
     args = parser.parse_args()
 
     main(args)
