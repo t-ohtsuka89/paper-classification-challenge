@@ -346,7 +346,7 @@ def main(hparams):
     get_result(oof_df, border=border, logger=logger)
 
     # Save OOF result
-    oof_df.to_csv(output_dir + "oof_df.csv", index=False)
+    oof_df.to_csv(os.path.join(output_dir, "oof_df.csv"), index=False)
     # Inference
     predictions = inference(
         data_frame=test,
