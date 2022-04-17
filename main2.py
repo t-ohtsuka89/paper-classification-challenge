@@ -363,6 +363,7 @@ def main(hparams):
 
 
 if __name__ == "__main__":
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     parser = ArgumentParser()
     parser.add_argument("--fold", default=10, type=int)
     parser.add_argument(
