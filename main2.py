@@ -198,6 +198,7 @@ def inference(
 def train_loop(
     train: pd.DataFrame,
     fold: int,
+    epochs: int,
     tokenizer: PreTrainedTokenizer,
     model_name: str,
     border: float,
@@ -252,7 +253,7 @@ def train_loop(
     # ====================================================
     best_score = -1
 
-    for epoch in range(5):
+    for epoch in range(epochs):
         start_time = time.time()
 
         # train
@@ -296,6 +297,7 @@ def get_result(result_df: pd.DataFrame, border: float, logger: Logger):
 def main(hparams):
     data_dir = hparams.data_dir
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    epochs: int = hparams.epochs
     fold_size: int = hparams.fold
     model_name: str = hparams.model_name
     output_dir: str = hparams.output_dir
@@ -327,6 +329,7 @@ def main(hparams):
         _oof_df = train_loop(
             border=border,
             device=device,
+            epochs=epochs,
             fold=fold,
             logger=logger,
             model_name=model_name,
@@ -372,6 +375,7 @@ if __name__ == "__main__":
         type=str,
     )
     parser.add_argument("--data_dir", default="data", type=str)
+    parser.add_argument("--epochs", default=5, type=int)
     parser.add_argument("--output_dir", default="outputs", type=str)
     parser.add_argument("--seed", default=472, type=int)
     args = parser.parse_args()
